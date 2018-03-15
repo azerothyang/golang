@@ -6,10 +6,6 @@ import (
 	"fmt"
 )
 
-type statistics struct {
-
-}
-
 func main() {
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		err := request.ParseForm()
