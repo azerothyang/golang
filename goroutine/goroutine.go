@@ -4,19 +4,14 @@ import (
 	"./policy"
 	"sync"
 	"log"
-	"os"
-	"fmt"
 )
 
 //开5个协程获取接口
-const goNumber  = 1
+const goNumber  = 1000
 
 func main() {
-	retData, err := policy.Request()
-	fmt.Println(err, retData)
-	os.Exit(1)
 	var waitGroup sync.WaitGroup
-	var chRetData chan *policy.RetData
+	chRetData := make(chan *policy.RetData) //这里注意需要make创建, 不能只声明, 不初始化
 	waitGroup.Add(goNumber)
 	for i:=0; i<goNumber; i++ {
 		//启动请求协程
@@ -36,7 +31,9 @@ func main() {
 }
 
 func Display(chRetData chan *policy.RetData){
+	count := 1
 	for data := range chRetData {
-		log.Printf("%s: \n", data.Message)
+		log.Printf("当前第%d次, 结果为: %d \n", count, data.Data.Total)
+		count++
 	}
 }

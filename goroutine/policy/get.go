@@ -5,22 +5,16 @@ import (
 	"net/http"
 	"errors"
 	"io/ioutil"
-	"fmt"
 )
 
 const uri  =  "http://talent.qh-1.cn/pc/home/newlist?version=personal&cur_code=0086&page=0&pageSize=1"
 
-//type RetData struct {
-//	Code int `json:"code"`
-//	Data data `json:"data"`
-//	Message string `json:"message"`
-//}
-
 type RetData struct {
-	Code uint8 `json:"code"`
-	Message string `json:"message"`
+	Code int `json:"code"`
 	Data data `json:"data"`
+	Message string `json:"message"`
 }
+
 
 type data struct {
 	NewPolicies []newPolicy `json:"newPolicies"`
@@ -42,17 +36,17 @@ type newPolicy struct {
 }
 
 //并行发送请求并解析, 将解析后的数据写入通道
-func RequestAndAnalyze(chRetData chan <- *RetData) error{
+func RequestAndAnalyze(chRetData chan <- *RetData){
 	retData, err := Request()
-	if err == nil {
-		chRetData <- retData
+	if err != nil {
+		return
 	}
-	return err
+	chRetData <- retData
 }
 
 //发送请求函数, 并且将请求解析的内容返回
 func Request() (*RetData, error) {
-	var retData *RetData
+	var retData RetData //retData
 	var retBytes []byte
 	res, err := http.Get(uri)
 	if err != nil {
@@ -66,13 +60,12 @@ func Request() (*RetData, error) {
 	}
 
 	if retBytes, err = ioutil.ReadAll(res.Body); err != nil {
-		return retData, err
+		return &retData, err
 	}
 	//解析内容
-	fmt.Println(string(retBytes[:]))
-	err = json.Unmarshal(retBytes, retData)
+	err = json.Unmarshal(retBytes, &retData) //retData返回的结构体 必需是地址, 也不能为空指针nil
 	if err != nil {
 		return nil, err
 	}
-	return retData, nil
+	return &retData, nil
 }
