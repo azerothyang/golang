@@ -7,8 +7,8 @@ type person interface {
 }
 
 type userr struct {
-	name string
-	age int
+	name  string
+	age   int
 	words string
 }
 
@@ -20,10 +20,10 @@ func main() {
 	speak(&u)
 }
 
-func speak(p person)  {
+func speak(p person) {
 	p.say()
 }
 
-func (u *userr)say()  {
+func (u *userr) say() {
 	fmt.Println(u.name, u.age, u.words)
 }
