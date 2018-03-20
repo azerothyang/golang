@@ -1,7 +1,14 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"time"
+)
 
 func main() {
+	go func() {
+		fmt.Println("hello goroutine")
+	}()
 	fmt.Println("hello world!")
+	time.Sleep(1000 * time.Millisecond)
 }
