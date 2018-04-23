@@ -1,9 +1,24 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func main() {
-	x := 0.2
-	y := 0.4
-	fmt.Printf("%t", x == y + 0.2)
+	var n int64 = 1000000000
+	times := 1
+	for true {
+		sum(n)
+		fmt.Println(times)
+		times++
+	}
+}
+
+func sum(n int64) int64 {
+	var i,res int64
+	res = 0
+	for i=0; i<=n; i++{
+		res += i
+	}
+	return res
 }
